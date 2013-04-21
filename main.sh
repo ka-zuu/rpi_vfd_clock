@@ -1,8 +1,7 @@
-#!/bin/bash -xv
+#!/bin/ksh
 
 
 # GPIO初期設定
-# ============
 
 #G1
 echo "14" > /sys/class/gpio/unexport
@@ -83,7 +82,7 @@ dsh=/sys/class/gpio/gpio11/value
 
 
 # 数字を出力するfunctionを組む
-function seg7_decode () {
+seg7_decode () {
   case $1 in
     "0" )
       echo 1 > $ao
@@ -200,38 +199,30 @@ function seg7_decode () {
 
 
 # メインループ
-
 while : ; do
   # 現在時刻を取得
-  now="$(date +%Y%m%d%H%M%S)"
+  now="$(date +%H%M)"
 
-  # 年
-
-
-echo 1 > $g1
-
-  seg7_decode 0
-  sleep 1
-  seg7_decode 1
-  sleep 1
-  seg7_decode 2
-  sleep 1
-  seg7_decode 3
-  sleep 1
-  seg7_decode 4
-  sleep 1
-  seg7_decode 5
-  sleep 1
-  seg7_decode 6
-  sleep 1
-  seg7_decode 7
-  sleep 1
-  seg7_decode 8
-  sleep 1
-  seg7_decode 9
-  sleep 1
+  
+    # 時間を表示
+    # G2
+    seg7_decode ${now:3:1}
+    echo 1 > $g2
+    echo 0 > $g2
+    # G3
+    seg7_decode ${now:2:1}
+    echo 1 > $g3
+    echo 0 > $g3
+    # G4
+    seg7_decode ${now:1:1}
+    echo 1 > $g4
+    echo 0 > $g4
+    # G5
+    seg7_decode ${now:0:1}
+    echo 1 > $g5
+    echo 0 > $g5
 done
 
 
-
-
+#  seg7_decode 8
+#  echo 1 > $g6
